@@ -11,6 +11,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "vue": "^3.5.30",
+    "vuetify": "^3.6.0",
+    "axios": "^1.6.2"
+  },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.4",
     "autoprefixer": "^10.4.27",
@@ -19,9 +24,5 @@
     "sass-loader": "^12.6.0",
     "tailwindcss": "^4.2.1",
     "vite": "^7.3.1"
-  },
-  "dependencies": {
-    "vue": "^3.5.30",
-    "vuetify": "^3.6.0"
   }
 }
