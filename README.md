@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Simple Notes Manager 📝
 
 ## Project Overview
@@ -10,6 +9,15 @@ A full-stack note-taking app built with Vue.js (frontend), Node.js + Express (ba
 3. Vue methods call backend Express API (/notes endpoints) using fetch
 4. Backend uses SQLite to persist notes (db/database.js)
 5. Responses are returned to frontend to update UI in real-time
+
+## API Endpoints
+Method		Endpoint		Description
+------------------------------------------------------------------------------
+1. GET		/notes		Get all notes
+2. GET		/notes/:id		Get a single note by ID
+3. POST		/notes		Create a new note
+4. PUT		/notes/:id		Update an existing note
+5. DELETE		/notes/:id		Delete a note
 
 ---
 
@@ -24,7 +32,3 @@ A full-stack note-taking app built with Vue.js (frontend), Node.js + Express (ba
 2. Install dependencies: npm install
 3. Start frontend server: npm run dev
 4. The frontend will run at http://localhost:5173.
-=======
-# simplefilemanagementsystem
-A full-stack note-taking app built with Vue.js (frontend), Node.js + Express (backend), and SQLite (database). Supports full CRUD operations.
->>>>>>> a4c51ed9cd180d7e69233a665eeed285d22aa488
