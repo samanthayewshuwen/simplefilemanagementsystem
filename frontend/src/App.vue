@@ -3,7 +3,7 @@
     <v-main>
       <v-container class="py-8">
 
-        <!-- Header (unchanged) -->
+        <!-- Header -->
         <v-row align="center" justify="space-between">
           <v-col cols="12" md="6">
             <h1>Simple Notes Manager 📝</h1>
@@ -35,7 +35,7 @@
                 <div class="note-content">{{ note.content }}</div>
                 <v-img
                   v-if="note.image"
-                  :src="`http://localhost:3000/uploads/${note.image}`"
+                  :src="`${import.meta.env.VITE_API_URL}/uploads/${note.image}`"
                   max-height="120"
                   class="my-2"
                 ></v-img>
@@ -61,7 +61,7 @@
               <v-file-input v-model="editedNote.imageFile" label="Upload Image" accept="image/*"></v-file-input>
               <v-img
                 v-if="editedNote.image && !editedNote.imageFile"
-                :src="`http://localhost:3000/uploads/${editedNote.image}`"
+                :src="`${import.meta.env.VITE_API_URL}/uploads/${editedNote.image}`"
                 max-height="150"
                 class="my-2"
               ></v-img>
@@ -80,6 +80,8 @@
 </template>
 
 <script>
+import { getNotes, createNote, updateNote, deleteNote } from './services/api';
+
 export default {
   data() {
     return {
@@ -123,9 +125,8 @@ export default {
   methods: {
     async fetchNotes() {
       try {
-        const res = await fetch("http://localhost:3000/notes");
-        const data = await res.json();
-        this.notes = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        const res = await getNotes();
+        this.notes = res.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       } catch (err) { console.error(err); }
     },
 
@@ -148,17 +149,17 @@ export default {
       if (this.editedNote.imageFile) formData.append("image", this.editedNote.imageFile);
 
       try {
-        let res;
+        let note;
         if (this.editedNote.id) {
-          res = await fetch(`http://localhost:3000/notes/${this.editedNote.id}`, { method: "PUT", body: formData });
-        } else {
-          res = await fetch("http://localhost:3000/notes", { method: "POST", body: formData });
-        }
-        const note = await res.json();
-        if (this.editedNote.id) {
+          const res = await updateNote(this.editedNote.id, formData);
+          note = res.data;
           const idx = this.notes.findIndex(n => n.id === note.id);
           if (idx !== -1) this.notes.splice(idx, 1, note);
-        } else this.notes.unshift(note);
+        } else {
+          const res = await createNote(formData);
+          note = res.data;
+          this.notes.unshift(note);
+        }
         this.closeDialog();
       } catch (err) { console.error(err); alert("Error saving note"); }
     },
@@ -167,7 +168,7 @@ export default {
       const confirmDelete = confirm("Are you sure you want to delete this note?");
       if (!confirmDelete) return;
       try {
-        await fetch(`http://localhost:3000/notes/${id}`, { method: "DELETE" });
+        await deleteNote(id);
         this.notes = this.notes.filter(n => n.id !== id);
       } catch (err) { console.error(err); }
     },
@@ -180,7 +181,6 @@ export default {
 <style>
 h1 { font-weight:bold; color: #2c3e50; }
 
-/* Card wrapper */
 .note-card {
   position: relative;
   height: 250px;
@@ -194,24 +194,18 @@ h1 { font-weight:bold; color: #2c3e50; }
   transition: all 0.5s ease;
   z-index: 1;
 }
-
-/* Hover: scale, strong shadow, background */
 .note-card:hover {
   transform: scale(1.1);
   box-shadow: 0 25px 60px rgba(0,0,0,0.9);
   background: linear-gradient(135deg, #d4f7d4, #a8e6cf);
   z-index: 5;
 }
-
-/* Scroll-triggered effect */
 .note-card.in-view {
   transform: scale(1.08);
   box-shadow: 0 20px 50px rgba(0,0,0,0.7);
   background: linear-gradient(135deg, #fff7cc, #ffdba4);
   transition: transform 0.5s ease, box-shadow 0.5s ease, background 0.5s ease;
 }
-
-/* Card body */
 .card-body {
   flex-grow: 1;
   padding: 12px;
@@ -223,8 +217,6 @@ h1 { font-weight:bold; color: #2c3e50; }
 .note-date { font-size: 12px; color: #555; margin-bottom: 4px; }
 .note-title { font-size: 16px; font-weight: bold; margin-bottom: 5px; color: #333; }
 .note-content { flex-grow: 1; color: #444; }
-
-/* Card actions */
 .card-actions {
   position: absolute;
   bottom: 0;
@@ -238,24 +230,8 @@ h1 { font-weight:bold; color: #2c3e50; }
   transition: transform 0.3s ease;
   z-index: 10;
 }
-.note-card:hover .card-actions {
-  transform: translateY(0);
-}
-
-/* Fancy buttons glow */
-.fancy-btn {
-  transition: all 0.3s ease;
-}
-.fancy-btn:hover {
-  box-shadow: 0 0 10px currentColor;
-  transform: scale(1.05);
-}
-
-/* Glassmorphic dialog */
-.glass-card {
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(15px);
-  border-radius: 15px;
-  border: 1px solid rgba(255,255,255,0.3);
-}
+.note-card:hover .card-actions { transform: translateY(0); }
+.fancy-btn { transition: all 0.3s ease; }
+.fancy-btn:hover { box-shadow: 0 0 10px currentColor; transform: scale(1.05); }
+.glass-card { background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(15px); border-radius: 15px; border: 1px solid rgba(255,255,255,0.3); }
 </style>
