@@ -1,0 +1,30 @@
+{
+  "name": "notes-api",
+  "version": "1.0.0",
+  "description": "Simple Node.js Express REST API with SQLite for a notes application",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": [
+    "express",
+    "sqlite",
+    "notes",
+    "rest",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.6",
+    "express": "^4.22.1",
+    "multer": "^2.1.1",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
