@@ -66,3 +66,5 @@ dist
 
 # VSCode test files
 .vscode-test
+.vercel
+.env*.local

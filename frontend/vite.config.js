@@ -1,10 +1,10 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vuetify from 'vite-plugin-vuetify'  // <-- add this
+import vuetify from 'vite-plugin-vuetify'
 
 export default defineConfig({
   plugins: [
     vue(),
-    vuetify({ autoImport: true }) // <-- add this
+    vuetify({ autoImport: true })
   ],
 })
